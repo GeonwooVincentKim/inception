@@ -1,19 +1,22 @@
-FROM debian:bookworm
+FROM debian:bullseye
 
-# MariaDB Installation
+# Install nginx and openssl
 RUN apt-get update && apt-get install -y \
-    mariadb-server \
+    nginx \
+    openssl \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy MariaDB Settings file
-COPY conf/my.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
+# Create SSL certificate
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+    -keyout /etc/ssl/private/nginx-selfsigned.key \
+    -out /etc/ssl/certs/nginx-selfsigned.crt \
+    -subj "/C=FR/ST=IDF/L=Paris/O=42/OU=42/CN=geonwkim.42.fr"
 
-# Copy Initialized Script
-COPY tools/init_db.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/init_db.sh
+# Copy nginx configuration
+COPY conf/nginx.conf /etc/nginx/nginx.conf
 
-# Show 3306 Port
-EXPOSE 3306
+# Expose port 443
+EXPOSE 443
 
-# Execute Initialized Script and MariaDB
-CMD ["/usr/local/bin/init_db.sh"]
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]
