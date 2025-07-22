@@ -1,13 +1,3 @@
-# Data directories
-data/
-/home/geonwkim/data/
-
-# Environment files with sensitive data
-.env
-
-# Docker volumes
-*_data/
-
 # System files
 .DS_Store
 Thumbs.db
