@@ -1,10 +1,10 @@
 FROM debian:bullseye
 
 # Install nginx and openssl
-RUN apt-get update && apt-get install -y \
+RUN apt-get update > /dev/null 2>&1 && apt-get install -y \
     nginx \
     openssl \
-    && rm -rf /var/lib/apt/lists/*
+    > /dev/null 2>&1 && rm -rf /var/lib/apt/lists/*
 
 # Create SSL certificate
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \

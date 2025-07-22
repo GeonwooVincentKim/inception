@@ -1,10 +1,10 @@
 FROM debian:bullseye
 
 # Install MariaDB
-RUN apt-get update && apt-get install -y \
+RUN apt-get update > /dev/null 2>&1 && apt-get install -y \
     mariadb-server \
     mariadb-client \
-    && rm -rf /var/lib/apt/lists/*
+    > /dev/null 2>&1 && rm -rf /var/lib/apt/lists/*
 
 # Copy MariaDB configuration
 COPY conf/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
@@ -27,3 +27,12 @@ EXPOSE 3306
 
 # Start MariaDB
 CMD ["/usr/local/bin/init_db.sh"]
+
+
+#to login to databases
+#docker exec -it mariadb bash
+#mariadb -u root -p
+#SHOW DATABASES;
+#USE thing
+#SHOW TABLES
+#exit to leave

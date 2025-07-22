@@ -1,7 +1,7 @@
 FROM debian:bullseye
 
 # Install PHP and required extensions
-RUN apt-get update && apt-get install -y \
+RUN apt-get update > /dev/null 2>&1 && apt-get install -y \
     php7.4-fpm \
     php7.4-mysql \
     php7.4-curl \
@@ -14,12 +14,14 @@ RUN apt-get update && apt-get install -y \
     php7.4-zip \
     php7.4-bcmath \
     wget \
+    curl \
     unzip \
-    && rm -rf /var/lib/apt/lists/*
+    > /dev/null 2>&1 && rm -rf /var/lib/apt/lists/*
 
 # Configure PHP-FPM
 RUN sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/' /etc/php/7.4/fpm/php.ini && \
-    sed -i 's/listen = \/run\/php\/php7.4-fpm.sock/listen = 9000/' /etc/php/7.4/fpm/pool.d/www.conf
+    sed -i 's/listen = \/run\/php\/php7.4-fpm.sock/listen = 9000/' /etc/php/7.4/fpm/pool.d/www.conf && \
+    mkdir -p /run/php
 
 # Create WordPress directory
 RUN mkdir -p /var/www/html/wordpress
